@@ -12,6 +12,8 @@ import { PagesComponent } from './pages.component';
 import { SharedModule } from '../shared/shared.module';
 import { ComponentsModule } from '../components/components.module';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
+import { PromesasComponent } from './promesas/promesas.component';
+import { RxjsComponent } from './rxjs/rxjs.component';
 
 
 
@@ -22,14 +24,18 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
     Grafica1Component,
     DashboardComponent,
     PagesComponent,
-    AccountSettingsComponent
+    AccountSettingsComponent,
+    PromesasComponent,
+    RxjsComponent
   ],
   exports:[
     ProgressComponent,
     Grafica1Component,
     DashboardComponent,
     PagesComponent,
-    AccountSettingsComponent
+    AccountSettingsComponent,
+    ProgressComponent,
+    RxjsComponent
   ],
   imports:[
     CommonModule,
