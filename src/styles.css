@@ -10,3 +10,10 @@
     display: flex;
     text-align: center;
 }
+
+.avatar-user{
+    height: 200px;
+    width:  200px;
+    margin-bottom: 5px;
+    border-radius: 50px;
+}

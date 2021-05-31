@@ -8,10 +8,11 @@ import { Router } from '@angular/router';
 
 import { loginForm } from '../interfaces/login.interface';
 import { RegisterForm } from '../interfaces/register-form.interface';
+import { Usuario } from '../models/usuario.models';
 
 declare const gapi:any;
 
-const baseUrl = environment.base_url
+const baseUrl = environment.base_url;
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +21,18 @@ export class UsuariosService {
 
   public auth2: any;
 
+  public usuario : Usuario;
+
   constructor( private http: HttpClient, private router : Router, private ngZone:NgZone ) { 
     this.googleInit();
+  }
+
+  get token():string{
+   return  localStorage.getItem('token') || '';
+  }
+
+  get uid():string{
+    return this.usuario.uid || '';
   }
 
   googleInit(){
@@ -56,17 +67,28 @@ export class UsuariosService {
 
   validateToken():Observable<boolean>{
 
-    const token = localStorage.getItem('token') || '';
+  
 
     return this.http.get(`${ baseUrl }/login/renew`,{
       headers: {
-        'x-token' : token
+        'x-token' : this.token
       }
     }).pipe(
-      tap((resp :any)=>{
+      map((resp :any)=>{
+
+        console.log(resp)
+
+        const { email, google, img='', nombre, role, uid  } = resp.usuario;
+
+        this.usuario = new Usuario(
+         nombre, email, '', role, google, img, uid
+        )
+      
         localStorage.setItem('token', resp.token);
+
+        return true;
       }),
-      map(resp=>true),
+    
       catchError( error => of(false) )
     )
 
@@ -79,6 +101,21 @@ export class UsuariosService {
               localStorage.setItem('token', resp.token)
               } )
             )
+
+  }
+
+  updateProfile( data: { nombre:string, email:string, role:string} ){
+
+    data = {
+      ...data,
+      role: this.usuario.role
+    }
+
+    return this.http.put(`${ baseUrl }/usuarios/${this.uid}`,data, {
+      headers: {
+        'x-token' : this.token
+      }
+    })
 
   }
 
